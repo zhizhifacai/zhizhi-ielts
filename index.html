@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>芝芝的雅思工作台</title>
+<meta name="description" content="60天雅思备考冲刺 · 专属学习工作台">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="雅思工作台">
+<meta name="theme-color" content="#e78b9f">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+<style>
+/* ====== CSS Variables: Light Theme ====== */
+:root{
+  --primary:#e78b9f;--primary-dark:#d4788f;--primary-light:#f5d0d9;--primary-soft:#fff5f7;
+  --secondary:#9db4c0;--accent:#f4a261;--accent-soft:#fff3e0;
+  --bg:#faf7f7;--card:#ffffff;--card-hover:#fdf2f4;
+  --text:#3d3d3d;--text-light:#8a8a8a;--text-muted:#b0b0b0;
+  --border:#f0e6e8;--border-light:#f8f2f3;
+  --shadow:0 4px 20px rgba(231,139,159,0.10);--shadow-lg:0 8px 32px rgba(231,139,159,0.12);
+  --green:#7fb285;--green-bg:#e8f5e9;--blue:#7fa8d1;--blue-bg:#e3f0ff;
+  --purple:#b8a9c9;--purple-bg:#f3eff9;--orange:#f4a261;--orange-bg:#fff3e0;
+  --pink:#e78b9f;--pink-bg:#ffe3ed;--cyan:#22d3ee;--cyan-bg:#e0f7fa;
+  --header-gradient:linear-gradient(135deg,#e78b9f,#d4788f);
+  --radius:18px;--radius-sm:12px;--radius-xs:8px;
+  --nav-bg:#ffffff;--drawer-bg:#ffffff;--scrollbar:#f0e6e8;
+  --tag-bg:#fff5f7;--tag-color:#e78b9f;--icon-muted:#d0c8ca;
+}
+[data-theme="dark"]{
+  --primary:#d47794;--primary-dark:#c06080;--primary-light:#5a3445;--primary-soft:#2d1a22;
+  --secondary:#6a8a9a;--accent:#d4955a;--accent-soft:#2d2018;
+  --bg:#1a1517;--card:#241d20;--card-hover:#2d2428;
+  --text:#e8e0e3;--text-light:#a0989c;--text-muted:#70686c;
+  --border:#3a3034;--border-light:#322a2e;
+  --shadow:0 4px 20px rgba(0,0,0,0.25);--shadow-lg:0 8px 32px rgba(0,0,0,0.30);
+  --green:#6a9e70;--green-bg:#1a2a1d;--blue:#6a95b8;--blue-bg:#1a2530;
+  --purple:#9e90b0;--purple-bg:#221d28;--orange:#d4955a;--orange-bg:#2d2018;
+  --pink:#d47794;--pink-bg:#2d1a22;--cyan:#1ca8b8;--cyan-bg:#1a282a;
+  --header-gradient:linear-gradient(135deg,#3d2a35,#2d1a22);
+  --nav-bg:#241d20;--drawer-bg:#241d20;--scrollbar:#3a3034;
+  --tag-bg:#3d2a35;--tag-color:#e8a0b5;--icon-muted:#5a5054;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.5;
+  transition:background .2s,color .2s;
+}
+#app{height:100%;display:flex;flex-direction:column;position:relative}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px}
+
+/* Header */
+.app-header{
+  background:var(--header-gradient);color:#fff;
+  padding:16px 18px 22px;border-radius:0 0 var(--radius) var(--radius);
+  box-shadow:0 4px 16px rgba(231,139,159,0.25);
+  position:relative;z-index:10;flex-shrink:0;
+}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.menu-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;border:none;cursor:pointer}
+.header-top-right{display:flex;align-items:center;gap:12px}
+.theme-toggle{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;border:none;cursor:pointer;transition:transform .15s}
+.theme-toggle:active{transform:scale(.9)}
+.header-date{text-align:right}
+.header-date .day{font-size:13px;opacity:.9}
+.header-date .date{font-size:16px;font-weight:600}
+.header-main{display:flex;justify-content:space-between;align-items:flex-end}
+.header-title h1{font-size:22px;font-weight:700;margin-bottom:2px}
+.header-title p{font-size:12px;opacity:.9}
+.header-day{text-align:right}
+.header-day .num{font-size:36px;font-weight:800;line-height:1}
+.header-day .label{font-size:11px;opacity:.9}
+
+/* Main */
+.app-main{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;padding-bottom:90px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.page{display:none}
+.page.active{display:block}
+
+/* Summary */
+.summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.summary-card{background:var(--card);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .2s}
+.summary-card .value{font-size:20px;font-weight:700;color:var(--primary)}
+.summary-card .label{font-size:10px;color:var(--text-light);margin-top:3px}
+
+/* Section */
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px}
+.section-title h2{font-size:16px;font-weight:700}
+
+/* Card */
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .2s}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.card-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-badge{font-size:10px;padding:3px 8px;border-radius:20px;background:var(--primary-soft);color:var(--primary);font-weight:600}
+
+/* Task */
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light);cursor:pointer;transition:all .15s}
+.task-item:last-child{border-bottom:none;padding-bottom:0}
+.task-item:first-child{padding-top:0}
+.task-item.done{opacity:.55}
+.task-item.done .task-text{text-decoration:line-through;color:var(--text-light)}
+.task-check{width:22px;height:22px;border:2px solid var(--primary-light);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-item.done .task-check{background:var(--green);border-color:var(--green)}
+.task-item.done .task-check::after{content:'✓';color:#fff;font-size:12px;font-weight:700}
+.task-content{flex:1;min-width:0}
+.task-text{font-size:14px;font-weight:500;transition:all .15s;word-break:break-word}
+.task-meta{font-size:11px;color:var(--text-light);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.task-tag{font-size:10px;padding:2px 6px;border-radius:10px;background:var(--tag-bg);color:var(--tag-color)}
+.task-time{font-size:11px;color:var(--accent);font-weight:600}
+
+/* Day progress */
+.day-progress{margin-top:10px}
+.day-progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.day-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:4px;transition:width .4s}
+.day-progress-text{font-size:11px;color:var(--text-light);margin-top:6px;text-align:right}
+
+/* Focus */
+.focus-banner{background:var(--primary-soft);border:1px solid var(--primary-light);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.focus-banner .icon{font-size:24px}
+.focus-banner .text{font-size:13px}
+.focus-banner .text strong{color:var(--primary)}
+
+/* Day nav */
+.day-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.day-nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--primary);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.day-nav-btn:active{background:var(--primary-soft)}
+.day-nav-title{text-align:center}
+.day-nav-title .main{font-size:16px;font-weight:700}
+.day-nav-title .sub{font-size:11px;color:var(--text-light)}
+
+/* Calendar */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-header{text-align:center;font-size:11px;color:var(--text-light);padding:6px 0;font-weight:600}
+.cal-day{aspect-ratio:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;font-size:10px;display:flex;flex-direction:column;cursor:pointer;transition:all .15s}
+.cal-day:active{transform:scale(.95)}
+.cal-day.today{border:2px solid var(--primary);background:var(--primary-soft)}
+.cal-day.past{opacity:.6}
+.cal-day.exam{border:2px solid var(--primary);background:var(--primary-soft)}
+.cal-day-num{font-weight:700;font-size:12px;color:var(--text)}
+.cal-day-progress{margin-top:auto;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.cal-day-fill{height:100%;background:var(--green);border-radius:2px}
+
+/* Skills */
+.skill-card-large{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.skill-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.skill-name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.skill-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.skill-icon.listen{background:var(--blue-bg);color:var(--blue)}
+.skill-icon.read{background:var(--green-bg);color:var(--green)}
+.skill-icon.write{background:var(--orange-bg);color:var(--orange)}
+.skill-icon.speak{background:var(--pink-bg);color:var(--pink)}
+.skill-progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.skill-progress-fill{height:100%;border-radius:4px;transition:width .4s}
+.skill-progress-text{display:flex;justify-content:space-between;font-size:11px;color:var(--text-light)}
+
+/* Method */
+.method-card{margin-bottom:12px}
+.method-card h3{font-size:14px;color:var(--primary);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.method-card ul{list-style:none;font-size:13px}
+.method-card li{padding-left:16px;position:relative;margin-bottom:8px;line-height:1.5}
+.method-card li::before{content:'•';color:var(--primary);position:absolute;left:4px}
+.method-tag{font-size:10px;color:var(--primary);background:var(--primary-soft);padding:2px 6px;border-radius:10px;margin-right:4px}
+
+/* Speaking topics */
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow);cursor:pointer;transition:all .15s}
+.topic-card:active{transform:scale(.98);background:var(--card-hover)}
+.topic-card .topic-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.topic-card .topic-title{font-size:14px;font-weight:600}
+.topic-card .topic-questions{font-size:11px;color:var(--text-light);line-height:1.6}
+.topic-card .topic-count{font-size:10px;color:var(--primary);background:var(--primary-soft);padding:2px 6px;border-radius:10px;flex-shrink:0;margin-left:8px}
+.topic-expand{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.topic-card.expanded .topic-expand{display:block}
+.topic-expand .qa{margin-bottom:10px}
+.topic-expand .q{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.topic-expand .a{font-size:12px;color:var(--text-light);line-height:1.6}
+.topic-expand .tip{font-size:11px;color:var(--accent);margin-top:4px;font-style:italic}
+.topic-search{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--card);color:var(--text);margin-bottom:14px;outline:none}
+.topic-search:focus{border-color:var(--primary)}
+
+/* Timeline */
+.timeline-item{display:flex;gap:12px;margin-bottom:16px}
+.timeline-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:6px;flex-shrink:0;box-shadow:0 0 0 4px var(--primary-soft)}
+.timeline-content{flex:1}
+.timeline-title{font-size:14px;font-weight:600}
+.timeline-desc{font-size:12px;color:var(--text-light);margin-top:2px}
+
+/* Settings */
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-label{font-size:14px}
+.settings-value{font-size:13px;color:var(--text-light)}
+.sync-status{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:500}
+.sync-status.synced{background:var(--green-bg);color:var(--green)}
+.sync-status.syncing{background:var(--orange-bg);color:var(--orange)}
+.sync-status.error{background:#fce4ec;color:#e57373}
+.sync-status.offline{background:var(--border);color:var(--text-light)}
+.btn{background:var(--primary);color:#fff;border:none;padding:12px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;width:100%;margin-top:8px;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.98);opacity:.9}
+.btn-secondary{background:var(--primary-soft);color:var(--primary)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);font-weight:500}
+.date-picker{border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:14px;color:var(--text);background:var(--card);outline:none}
+.date-picker:focus{border-color:var(--primary)}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom, 0px));z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,0.05)}
+.nav-item{flex:1;text-align:center;padding:6px 0;color:var(--text-light);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;cursor:pointer;transition:all .15s}
+.nav-item.active{color:var(--primary);font-weight:600}
+.nav-icon{font-size:20px}
+
+/* Drawer */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s;z-index:100}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;left:0;top:0;bottom:0;width:min(75vw,280px);background:var(--drawer-bg);transform:translateX(-100%);transition:transform .25s;z-index:101;display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,.15)}
+.drawer.open{transform:translateX(0)}
+.drawer-header{background:var(--header-gradient);color:#fff;padding:28px 20px 24px}
+.drawer-header h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.drawer-header p{font-size:12px;opacity:.9}
+.drawer-nav{flex:1;padding:8px 0;overflow-y:auto}
+.drawer-item{display:flex;align-items:center;gap:14px;padding:14px 20px;font-size:15px;color:var(--text);border-left:3px solid transparent;cursor:pointer;transition:all .15s}
+.drawer-item:active{background:var(--primary-soft)}
+.drawer-item.active{background:var(--primary-soft);border-left-color:var(--primary);color:var(--primary);font-weight:600}
+.drawer-icon{font-size:20px;width:28px;text-align:center}
+.drawer-footer{padding:16px 20px;font-size:11px;color:var(--text-light);border-top:1px solid var(--border)}
+
+/* Page title */
+.page-title{font-size:20px;font-weight:700;margin-bottom:16px}
+
+/* History */
+.history-date-group{margin-bottom:16px}
+.history-date-label{font-size:12px;color:var(--text-light);margin-bottom:8px;font-weight:600}
+.history-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.history-card:active{background:var(--card-hover)}
+.history-card .hc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.history-card .hc-day{font-size:13px;font-weight:600}
+.history-card .hc-pct{font-size:11px;color:var(--primary);font-weight:600}
+.history-card .hc-tasks{font-size:11px;color:var(--text-light)}
+
+/* Offline badge */
+.offline-badge{display:none;text-align:center;padding:6px;background:var(--orange-bg);color:var(--orange);font-size:11px;font-weight:500}
+.offline-badge.show{display:block}
+
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--card);padding:10px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Landscape */
+@media(min-width:768px){
+  .app-main{padding:20px 32px;max-width:900px;margin:0 auto}
+  .summary-cards{gap:14px}
+  .card{padding:20px}
+  .calendar-grid{gap:8px}
+  .cal-day{padding:8px}
+  .cal-day-num{font-size:14px}
+  .bottom-nav{max-width:500px;left:50%;transform:translateX(-50%);border-radius:var(--radius) var(--radius) 0 0}
+}
+@media(min-width:1024px){
+  .bottom-nav{max-width:900px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="offline-badge" id="offlineBadge">📴 离线模式 · 数据已保存到本地</div>
+  <header class="app-header">
+    <div class="header-top">
+      <button class="menu-btn" onclick="toggleDrawer()">☰</button>
+      <div class="header-top-right">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+        <div class="header-date"><div class="day" id="headerWeekday">周四</div><div class="date" id="headerDate">7月31日</div></div>
+      </div>
+    </div>
+    <div class="header-main">
+      <div class="header-title"><h1>芝芝的雅思工作台</h1><p>60天冲刺 · 目标 7.0+</p></div>
+      <div class="header-day"><div class="num" id="headerDayNum">Day 1</div><div class="label">距离考试 <span id="headerDaysLeft">60</span> 天</div></div>
+    </div>
+  </header>
+
+  <main class="app-main" id="appMain">
+    <div class="page active" id="page-today">
+      <div class="summary-cards">
+        <div class="summary-card"><div class="value" id="sumTotal">0</div><div class="label">总任务</div></div>
+        <div class="summary-card"><div class="value" id="sumDone">0</div><div class="label">已完成</div></div>
+        <div class="summary-card"><div class="value" id="sumToday">0</div><div class="label">今日待办</div></div>
+        <div class="summary-card"><div class="value" id="sumStreak">0</div><div class="label">连续打卡</div></div>
+      </div>
+      <div class="focus-banner"><div class="icon">🎯</div><div class="text" id="focusText"></div></div>
+      <div class="day-nav">
+        <button class="day-nav-btn" onclick="changeDay(-1)">‹</button>
+        <div class="day-nav-title"><div class="main" id="dayNavTitle">Day 1</div><div class="sub" id="dayNavSub"></div></div>
+        <button class="day-nav-btn" onclick="changeDay(1)">›</button>
+      </div>
+      <div id="todayTasks"></div>
+    </div>
+    <div class="page" id="page-calendar">
+      <div class="page-title">60天日历</div>
+      <div class="card"><div class="calendar-grid" id="calendarGrid"></div></div>
+      <div class="section-title"><h2>阶段安排</h2></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Day 1 - 20 基础输入+方法论</div><div class="timeline-desc">语料库第一遍、Simon/杜仕明/真经总纲、538同替</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Day 21 - 45 专项输出+精练</div><div class="timeline-desc">真题套题、AI批改、Part 2串题、四步复盘</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Day 46 - 60 模考冲刺</div><div class="timeline-desc">全科模考、语料库第二遍收尾、调整状态</div></div></div>
+    </div>
+    <div class="page" id="page-skills">
+      <div class="page-title">四科进度</div>
+      <div id="skillsContainer"></div>
+    </div>
+    <div class="page" id="page-method">
+      <div class="page-title">经验方法论</div>
+      <div class="card method-card"><h3>🎧 听力精听三步法</h3><ul><li><span class="method-tag">听不懂</span>反复盲听，直到能抓住关键词</li><li><span class="method-tag">写不出</span>看原文跟读，强化语音拼写连接</li><li><span class="method-tag">写错</span>整理易混词、拼写错误本</li><li>王陆语料库考前刷 <strong>2遍</strong></li><li>每日英美剧/电影 20分钟，保持语感</li></ul></div>
+      <div class="card method-card"><h3>📖 阅读复盘四步法</h3><ul><li>① 错误原因归类</li><li>② 锁定错误段落意思</li><li>③ 找出题干对应的正确段落意思</li><li>④ 对照题干短语和原文短语的同义替换</li><li>每日积累 <span class="method-tag">刘洪波538</span> 同义替换词</li></ul></div>
+      <div class="card method-card"><h3>✍ 写作双师框架</h3><ul><li>框架：<span class="method-tag">Simon考官</span> + <span class="method-tag">杜仕明写作课</span></li><li>小作文：折线图 / 柱状图 / 饼图 / 表格 / 地图 / 流程图</li><li>大作文：是否同意 / 利弊分析 / 双边讨论 / 报告类</li><li>每次训练后用 <span class="method-tag">多次元雅思AI</span> 批改</li><li>重点训练段落与段落之间的逻辑链</li></ul></div>
+      <div class="card method-card"><h3>🗣 口语三件套</h3><ul><li>跟练 <span class="method-tag">薛麦</span> 每日约 2h（可拆分早/晚）</li><li>Part 2 用素材串题，减少记忆负担</li><li>随机抽题模拟考场，训练即时反应</li><li>录音回听，纠正发音与语法错误</li></ul></div>
+    </div>
+    <div class="page" id="page-speaking1">
+      <div class="page-title">口语 Part 1 话题库</div>
+      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">2026年5-8月最新题库 · 点击话题展开题目和范例</p>
+      <input class="topic-search" id="p1Search" placeholder="搜索 Part 1 话题..." oninput="filterTopics('p1')">
+      <div id="p1Topics"></div>
+    </div>
+    <div class="page" id="page-speaking2">
+      <div class="page-title">口语 Part 2 话题卡</div>
+      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">2026年5-8月最新题库 · 33个话题卡 · 点击展开提示和串题思路</p>
+      <input class="topic-search" id="p2Search" placeholder="搜索 Part 2 话题卡..." oninput="filterTopics('p2')">
+      <div id="p2Topics"></div>
+    </div>
+    <div class="page" id="page-history">
+      <div class="page-title">历史记录</div>
+      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">所有打卡记录自动归档，随时回溯</p>
+      <div id="historyList"></div>
+    </div>
+    <div class="page" id="page-settings">
+      <div class="page-title">设置</div>
+      <div class="card">
+        <div class="settings-row"><span class="settings-label">考试日期</span><input type="date" class="date-picker" id="examDateInput"></div>
+        <div class="settings-row"><span class="settings-label">目标分数</span><span class="settings-value">7.0+</span></div>
+        <div class="settings-row"><span class="settings-label">云端同步</span><span id="syncStatus" class="sync-status offline">未配置</span></div>
+        <div class="settings-row"><span class="settings-label">当前主题</span><span class="settings-value" id="themeLabel">浅色 · 暖粉</span></div>
+        <div class="settings-row"><span class="settings-label">数据存储</span><span class="settings-value">本地 + 云端</span></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-title" style="font-size:14px;margin-bottom:10px">Supabase 云端同步配置</div>
+        <p style="font-size:11px;color:var(--text-light);margin-bottom:10px">注册 <a href="https://supabase.com" target="_blank" style="color:var(--primary)">Supabase</a> 后创建项目，填入 Project URL 和 anon Key 即可启用跨设备同步。</p>
+        <input class="topic-search" id="supabaseUrl" placeholder="Project URL (如 https://xxx.supabase.co)" style="margin-bottom:8px">
+        <input class="topic-search" id="supabaseKey" placeholder="anon / public key" style="margin-bottom:12px">
+        <button class="btn" onclick="setupSupabase()">连接并同步</button>
+        <button class="btn btn-outline" onclick="exportData()" style="margin-top:6px">导出数据 (JSON)</button>
+        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()" style="margin-top:6px">导入数据 (JSON)</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+      <button class="btn btn-secondary" onclick="resetAll()" style="margin-top:12px">重置所有学习进度</button>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-page="today" onclick="navTo('today')"><span class="nav-icon">📋</span><span>今日</span></button>
+    <button class="nav-item" data-page="calendar" onclick="navTo('calendar')"><span class="nav-icon">📅</span><span>日历</span></button>
+    <button class="nav-item" data-page="skills" onclick="navTo('skills')"><span class="nav-icon">📊</span><span>进度</span></button>
+    <button class="nav-item" data-page="method" onclick="navTo('method')"><span class="nav-icon">💡</span><span>方法</span></button>
+    <button class="nav-item" data-page="settings" onclick="navTo('settings')"><span class="nav-icon">⚙️</span><span>设置</span></button>
+  </nav>
+
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header"><h2>🎀 我的工作台</h2><p>私人专属 · 可爱备考</p></div>
+    <nav class="drawer-nav" id="drawerNav">
+      <div class="drawer-item active" data-page="today" onclick="navTo('today');toggleDrawer()"><span class="drawer-icon">📋</span><span>今日任务</span></div>
+      <div class="drawer-item" data-page="calendar" onclick="navTo('calendar');toggleDrawer()"><span class="drawer-icon">📅</span><span>60天日历</span></div>
+      <div class="drawer-item" data-page="skills" onclick="navTo('skills');toggleDrawer()"><span class="drawer-icon">📊</span><span>四科进度</span></div>
+      <div class="drawer-item" data-page="history" onclick="navTo('history');toggleDrawer()"><span class="drawer-icon">📜</span><span>历史记录</span></div>
+      <div class="drawer-item" data-page="method" onclick="navTo('method');toggleDrawer()"><span class="drawer-icon">💡</span><span>经验方法论</span></div>
+      <div class="drawer-item" data-page="speaking1" onclick="navTo('speaking1');toggleDrawer()"><span class="drawer-icon">💬</span><span>口语 Part 1 资料</span></div>
+      <div class="drawer-item" data-page="speaking2" onclick="navTo('speaking2');toggleDrawer()"><span class="drawer-icon">📝</span><span>口语 Part 2 资料</span></div>
+      <div class="drawer-item" data-page="settings" onclick="navTo('settings');toggleDrawer()"><span class="drawer-icon">⚙️</span><span>设置</span></div>
+    </nav>
+    <div class="drawer-footer">v2.0 · 本地+云端双保险</div>
+  </aside>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+// ========== Config ==========
+const TOTAL_DAYS = 60;
+const STORAGE_KEY = 'zhizhi_ielts_v4';
+const HISTORY_KEY = 'zhizhi_ielts_history_v4';
+const THEME_KEY = 'zhizhi_ielts_theme';
+const SUPABASE_URL_KEY = 'zhizhi_supabase_url';
+const SUPABASE_KEY_KEY = 'zhizhi_supabase_key';
+
+const focusHints = {
+  1:'夯实基础 + 语料库第一遍开始',10:'关注"听不懂"类型错题，强化基础辨音',
+  15:'前15天无写作任务，专注输入',16:'写作任务开始！学习大作文框架',
+  20:'阶段一收尾：完成语料库1/2，整理听力写错词本',21:'进入真题套题，开始AI批改作文',
+  30:'语料库第一遍收尾，阅读四步复盘要熟练',31:'语料库第二遍开始，重点提速',
+  40:'Part 2串题基本成型，开始随机抽题',45:'阶段二收尾：全科错题本过一遍',
+  46:'全真模考密集期，调整作息',55:'语料库第二遍收尾，只看错题',
+  60:'🎯 考试日，祝你屠鸭成功！'
+};
+
+// ========== State ==========
+let state = {startDate:'2026-07-31',examDate:null,currentDay:1,progress:{},theme:'light',supabaseUrl:'',supabaseKey:''};
+
+function loadState(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}}
+  if(!state.progress) state.progress = {};
+  if(!state.currentDay) state.currentDay = 1;
+  if(!state.startDate) state.startDate = '2026-07-31';
+  state.theme = localStorage.getItem(THEME_KEY) || 'light';
+  applyTheme(state.theme);
+  state.supabaseUrl = localStorage.getItem(SUPABASE_URL_KEY) || '';
+  state.supabaseKey = localStorage.getItem(SUPABASE_KEY_KEY) || '';
+  const start = new Date(state.startDate + 'T00:00:00');
+  start.setDate(start.getDate() + 60);
+  state.examDate = start.toISOString().split('T')[0];
+  const today = new Date(); today.setHours(0,0,0,0);
+  const startDay = new Date(state.startDate + 'T00:00:00');
+  const diffDays = Math.floor((today - startDay) / (1000*60*60*24)) + 1;
+  if(diffDays >= 1 && diffDays <= TOTAL_DAYS) state.currentDay = diffDays;
+}
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    startDate:state.startDate,examDate:state.examDate,currentDay:state.currentDay,progress:state.progress
+  }));
+  archiveHistory();
+  syncToCloud();
+}
+
+function archiveHistory(){
+  const day = state.currentDay;
+  const tasks = getDayTasks(day);
+  const done = tasks.filter((_,i)=>isTaskDone(day,i)).length;
+  const pct = tasks.length ? Math.round(done/tasks.length*100) : 0;
+  let history = {};
+  try{ history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '{}'); }catch(e){}
+  const date = new Date(state.startDate + 'T00:00:00');
+  date.setDate(date.getDate() + day - 1);
+  history[date.toISOString().split('T')[0]] = {day,total:tasks.length,done,pct,tasks:tasks.map((t,i)=>({text:t.text,done:isTaskDone(day,i)}))};
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+// ========== Theme ==========
+function toggleTheme(){
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  localStorage.setItem(THEME_KEY, state.theme);
+  applyTheme(state.theme);
+  render();
+}
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  const label = document.getElementById('themeLabel');
+  if(theme === 'dark'){
+    if(btn) btn.textContent = '☀️';
+    if(label) label.textContent = '深色 · 暗夜';
+    document.querySelector('meta[name="theme-color"]').content = '#2d1a22';
+  } else {
+    if(btn) btn.textContent = '🌙';
+    if(label) label.textContent = '浅色 · 暖粉';
+    document.querySelector('meta[name="theme-color"]').content = '#e78b9f';
+  }
+}
+
+// ========== Tasks ==========
+function generateDayTasks(day){
+  const tasks = [];
+  const phase = day <= 20 ? 1 : (day <= 45 ? 2 : 3);
+  const isWangLuRound1 = day <= 30;
+  const isWangLuRound2 = day > 30 && day <= 55;
+
+  tasks.push({section:'vocab',sectionName:'词汇',text:'背诵雅思核心词汇 100个（新学+复习）',meta:'睡前快速过一遍',duration:'40min',tool:'单词APP'});
+  tasks.push({section:'vocab',sectionName:'词汇',text:'做题过程中遇到的生词积累背诵',meta:'整理听力/阅读/写作中遇到的生词、同替词到生词本',duration:'60min',tool:'生词本'});
+
+  tasks.push({section:'listening',sectionName:'听力',text:isWangLuRound1?'王陆语料库 第一遍 · 今日章节听写':isWangLuRound2?'王陆语料库 第二遍 · 加速1.2倍，只写错题':'王陆语料库 考前错题回顾',meta:'核对答案，整理三类问题',duration:'30min',tool:'王陆语料库'});
+
+  if(day % 2 === 1){
+    if(phase === 1) tasks.push({section:'listening',sectionName:'听力',text:'剑雅真题：Section 1-2 一套 + 整篇精听',meta:'精听重点：听不懂/写不出/写错',duration:'50min',tool:'剑雅真题'});
+    else if(phase === 2) tasks.push({section:'listening',sectionName:'听力',text:'剑雅真题：完整一套听力（4个Section）',meta:'做完后精听错题部分',duration:'60min',tool:'剑雅真题'});
+    else tasks.push({section:'listening',sectionName:'听力',text:'听力全真模考（30分钟限时）+ 错题精听',meta:'模拟考场节奏',duration:'45min',tool:'剑雅真题'});
+  } else {
+    tasks.push({section:'listening',sectionName:'听力',text:'听力错题复盘 + 同义替换词整理',meta:'按三类问题分类整理',duration:'30min',tool:'错题本'});
+    tasks.push({section:'listening',sectionName:'听力',text:'英美剧/电影 泛听 20分钟',meta:'英文字幕，保持语感',duration:'20min',tool:'BBC/美剧'});
+  }
+
+  tasks.push({section:'reading',sectionName:'阅读',text:day%3===1?'刘洪波538同义替换词 背诵+复习':'刘洪波538同义替换词 复习昨日',meta:'重点记"题干词⇄原文词"',duration:'20min',tool:'刘洪波538'});
+  if(day % 2 === 0){
+    if(phase === 1) tasks.push({section:'reading',sectionName:'阅读',text:'剑雅阅读 Passage 1 精读 + 真经总纲技巧对照',meta:'练习定位与同替意识',duration:'45min',tool:'剑雅+真经总纲'});
+    else if(phase === 2) tasks.push({section:'reading',sectionName:'阅读',text:'剑雅阅读 一套三篇（60分钟限时）',meta:'模拟真实考试时间',duration:'60min',tool:'剑雅真题'});
+    else tasks.push({section:'reading',sectionName:'阅读',text:'阅读全真模考（60分钟限时）',meta:'严格控制时间',duration:'60min',tool:'剑雅真题'});
+  } else {
+    tasks.push({section:'reading',sectionName:'阅读',text:'阅读错题四步复盘',meta:'①错误原因 ②错误段落 ③正确段落 ④同替对应',duration:'40min',tool:'错题本'});
+  }
+
+  // Writing — skip first 15 days
+  if(day > 15){
+    const wc = day % 4;
+    if(wc === 1) tasks.push({section:'writing',sectionName:'写作',text:phase===1?`学习Simon/杜仕明 ${['是否同意类','利弊分析类','双边讨论类','报告类'][Math.floor((day-1)/4)%4]} 大作文框架`:'大作文限时训练（40分钟）+ 多次元雅思AI批改',meta:phase===1?'整理结构模板与常用句型':'写完后对照AI反馈修改',duration:phase===1?'50min':'60min',tool:phase===1?'Simon+杜仕明':'多次元雅思AI'});
+    else if(wc === 2){const c=['折线图','柱状图','饼图','表格','地图','流程图'];const chart=c[(Math.floor((day-1)/4))%c.length];tasks.push({section:'writing',sectionName:'写作',text:phase===1?`学习Simon ${chart} 小作文框架与范文`:`${chart} 小作文限时训练（20分钟）+ AI批改`,meta:'积累趋势/对比/方位/流程表达',duration:phase===1?'40min':'30min',tool:phase===1?'Simon考官':'多次元雅思AI'});}
+    else if(wc === 3) tasks.push({section:'writing',sectionName:'写作',text:'高分范文精读 + 逻辑链拆解',meta:'分析论点→解释→例子→结论',duration:'40min',tool:'Simon范文'});
+    else tasks.push({section:'writing',sectionName:'写作',text:'写作素材积累：高级表达、衔接词、观点库',meta:'分类：教育/科技/环境/社会/犯罪',duration:'30min',tool:'素材本'});
+  }
+
+  tasks.push({section:'speaking',sectionName:'口语',text:'跟练薛麦：发音、语调、流利度训练',meta:'可分早/晚两段完成',duration:'60min',tool:'薛麦'});
+  const p2d = day % 7;
+  if(p2d < 5) tasks.push({section:'speaking',sectionName:'口语',text:`Part 2 串题练习 · 今日${p2d===0?5:p2d}个话题卡`,meta:'一个素材串多个题目',duration:'30min',tool:'口语题库'});
+  else tasks.push({section:'speaking',sectionName:'口语',text:'随机抽题模拟 + Part 3 深入讨论',meta:'录音回听，关注语法流利度',duration:'30min',tool:'口语题库'});
+  tasks.push({section:'speaking',sectionName:'口语',text:'Part 1 日常话题快速问答',meta:'每题说2-3句话',duration:'15min',tool:'口语题库'});
+
+  if(phase >= 2 && day % 7 === 0) tasks.push({section:'mock',sectionName:'模考',text:'全科模考：听力+阅读+写作',meta:'严格按考试时间',duration:'2h40min',tool:'剑雅真题'});
+  if(phase === 3 && day < 60 && day % 3 === 1) tasks.push({section:'mock',sectionName:'模考',text:'口语全真模考（11-14分钟）',meta:'找语伴、老师或AI模拟',duration:'15min',tool:'多次元雅思/语伴'});
+  return tasks;
+}
+
+function getDayTasks(day){return generateDayTasks(day)}
+function isTaskDone(day,idx){return state.progress[day]&&state.progress[day][idx]}
+
+function toggleTask(day,idx){
+  if(!state.progress[day]) state.progress[day] = {};
+  state.progress[day][idx] = !state.progress[day][idx];
+  saveState();render();showToast('已'+(state.progress[day][idx]?'完成 ✓':'取消'));
+}
+
+// ========== Supabase ==========
+async function setupSupabase(){
+  const url=document.getElementById('supabaseUrl').value.trim();
+  const key=document.getElementById('supabaseKey').value.trim();
+  if(!url||!key){showToast('请填写完整信息');return}
+  state.supabaseUrl=url;state.supabaseKey=key;
+  localStorage.setItem(SUPABASE_URL_KEY,url);localStorage.setItem(SUPABASE_KEY_KEY,key);
+  updateSyncStatus('syncing','连接中...');
+  try{
+    await fetch(`${url}/rest/v1/ielts_progress`,{method:'POST',headers:{'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},body:JSON.stringify({user_id:'default',data:JSON.stringify(state),updated_at:new Date().toISOString()})});
+    updateSyncStatus('synced','已同步');showToast('云端连接成功 ✓');
+  }catch(e){updateSyncStatus('error','连接失败');showToast('连接失败，请检查信息')}
+}
+
+async function syncToCloud(){
+  if(!state.supabaseUrl||!state.supabaseKey) return;
+  try{
+    updateSyncStatus('syncing','同步中...');
+    await fetch(`${state.supabaseUrl}/rest/v1/ielts_progress`,{method:'POST',headers:{'apikey':state.supabaseKey,'Authorization':'Bearer '+state.supabaseKey,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},body:JSON.stringify({user_id:'default',data:JSON.stringify(state),updated_at:new Date().toISOString()})});
+    updateSyncStatus('synced','已同步');
+  }catch(e){updateSyncStatus('offline','离线')}
+}
+
+function updateSyncStatus(cls,text){
+  const el=document.getElementById('syncStatus');if(!el)return;
+  el.className='sync-status '+cls;el.textContent=text;
+}
+
+// ========== Import/Export ==========
+function exportData(){
+  const data={state,history:JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}'),exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='zhizhi-ielts-backup-'+new Date().toISOString().split('T')[0]+'.json';a.click();
+  showToast('导出成功 ✓');
+}
+function importData(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.state){state.startDate=data.state.startDate||state.startDate;state.progress=data.state.progress||{};state.currentDay=data.state.currentDay||1;state.supabaseUrl=data.state.supabaseUrl||'';state.supabaseKey=data.state.supabaseKey||'';saveState();}
+      if(data.history) localStorage.setItem(HISTORY_KEY,JSON.stringify(data.history));
+      render();showToast('导入成功 ✓');
+    }catch(e){showToast('文件格式错误')}
+  };
+  reader.readAsText(file);
+}
+
+// ========== UI ==========
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(el._timeout);el._timeout=setTimeout(()=>el.classList.remove('show'),2000);
+}
+function toggleDrawer(){
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+}
+function navTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.drawer-item[data-page]').forEach(n=>n.classList.remove('active'));
+  const pageEl=document.getElementById('page-'+page);if(pageEl)pageEl.classList.add('active');
+  document.querySelectorAll('[data-page="'+page+'"]').forEach(el=>{if(el.classList.contains('nav-item')||el.classList.contains('drawer-item'))el.classList.add('active')});
+  document.getElementById('appMain').scrollTop=0;render();
+}
+function changeDay(delta){state.currentDay=Math.max(1,Math.min(TOTAL_DAYS,state.currentDay+delta));saveState();render()}
+function goToDay(day){state.currentDay=day;saveState();navTo('today')}
+function resetAll(){if(confirm('确定要重置所有进度吗？')){state.progress={};state.currentDay=1;saveState();render();showToast('已重置')}}
+function getPhaseName(day){return day<=20?'基础阶段':day<=45?'专项阶段':'冲刺阶段'}
+
+// ========== Render ==========
+function render(){renderHeader();renderToday();renderCalendar();renderSkills();renderHistory();updateSyncIndicator()}
+function renderHeader(){
+  const startDate=new Date(state.startDate+'T00:00:00');const currentDate=new Date(startDate);
+  currentDate.setDate(startDate.getDate()+state.currentDay-1);
+  const wd=['周日','周一','周二','周三','周四','周五','周六'];
+  document.getElementById('headerWeekday').textContent=wd[currentDate.getDay()];
+  document.getElementById('headerDate').textContent=`${currentDate.getMonth()+1}月${currentDate.getDate()}日`;
+  document.getElementById('headerDayNum').textContent='Day '+state.currentDay;
+  const examDate=new Date(state.examDate+'T00:00:00');const today=new Date();today.setHours(0,0,0,0);
+  document.getElementById('headerDaysLeft').textContent=Math.max(0,Math.ceil((examDate-today)/(1000*60*60*24)));
+  const ei=document.getElementById('examDateInput');if(ei)ei.value=state.examDate;
+}
+function renderToday(){
+  const day=state.currentDay;const tasks=getDayTasks(day);
+  let totalAll=0,doneAll=0;
+  for(let d=1;d<=TOTAL_DAYS;d++){const ts=getDayTasks(d);totalAll+=ts.length;if(state.progress[d])ts.forEach((_,i)=>{if(state.progress[d][i])doneAll++})}
+  document.getElementById('sumTotal').textContent=totalAll;document.getElementById('sumDone').textContent=doneAll;
+  document.getElementById('sumToday').textContent=tasks.length-tasks.filter((_,i)=>isTaskDone(day,i)).length;
+  let streak=0;for(let d=day;d>=1;d--){const ts=getDayTasks(d);if(ts.every((_,i)=>isTaskDone(d,i))&&ts.length>0)streak++;else break}
+  document.getElementById('sumStreak').textContent=streak;
+  let hint=focusHints[1];const keys=Object.keys(focusHints).map(Number).sort((a,b)=>a-b);
+  for(let k of keys){if(day>=k)hint=focusHints[k];else break}if(day===TOTAL_DAYS)hint=focusHints[TOTAL_DAYS];
+  document.getElementById('focusText').innerHTML=`<strong>今日重点：</strong>${hint}`;
+  const startDate=new Date(state.startDate+'T00:00:00');const currentDate=new Date(startDate);currentDate.setDate(startDate.getDate()+day-1);
+  document.getElementById('dayNavTitle').textContent=`Day ${day}`;
+  document.getElementById('dayNavSub').textContent=`${currentDate.getMonth()+1}月${currentDate.getDate()}日 · ${getPhaseName(day)}`;
+  const sections={};tasks.forEach((t,i)=>{if(!sections[t.section])sections[t.section]={name:t.sectionName,tasks:[]};sections[t.section].tasks.push({...t,idx:i})});
+  const so=['vocab','listening','reading','writing','speaking','mock'];const im={vocab:'📚',listening:'🎧',reading:'📖',writing:'✍',speaking:'🗣',mock:'🎯'};
+  let html='';so.forEach(sec=>{if(!sections[sec])return;const s=sections[sec];const sd=s.tasks.filter(t=>isTaskDone(day,t.idx)).length;const pct=Math.round(sd/s.tasks.length*100);
+  html+=`<div class="card"><div class="card-header"><div class="card-title">${im[sec]||'📝'} ${s.name}</div><span class="card-badge">${sd}/${s.tasks.length}</span></div>`;
+  s.tasks.forEach(t=>{const done=isTaskDone(day,t.idx);html+=`<div class="task-item ${done?'done':''}" onclick="toggleTask(${day},${t.idx})"><div class="task-check"></div><div class="task-content"><div class="task-text">${t.text}</div><div class="task-meta"><span class="task-tag">${t.tool}</span><span>${t.meta}</span><span class="task-time">${t.duration}</span></div></div></div>`});
+  html+=`<div class="day-progress"><div class="day-progress-bar"><div class="day-progress-fill" style="width:${pct}%"></div></div><div class="day-progress-text">${pct}% 完成</div></div></div>`});
+  document.getElementById('todayTasks').innerHTML=html;
+}
+function renderCalendar(){
+  const grid=document.getElementById('calendarGrid');if(!grid)return;
+  let html='';['一','二','三','四','五','六','日'].forEach(d=>html+=`<div class="cal-header">${d}</div>`);
+  const startDate=new Date(state.startDate+'T00:00:00');const sw=(startDate.getDay()+6)%7;
+  for(let i=0;i<sw;i++)html+='<div></div>';
+  for(let d=1;d<=TOTAL_DAYS;d++){const ts=getDayTasks(d);const done=state.progress[d]?ts.filter((_,i)=>state.progress[d][i]).length:0;const pct=ts.length?Math.round(done/ts.length*100):0;const dt=new Date(state.startDate+'T00:00:00');dt.setDate(dt.getDate()+d-1);html+=`<div class="cal-day${d===state.currentDay?' today':''}${d<state.currentDay?' past':''}${d===TOTAL_DAYS?' exam':''}" onclick="goToDay(${d})"><div class="cal-day-num">${dt.getDate()}</div><div class="cal-day-progress"><div class="cal-day-fill" style="width:${pct}%"></div></div></div>`}
+  grid.innerHTML=html;
+}
+function renderSkills(){
+  const c=document.getElementById('skillsContainer');if(!c)return;
+  const skills=[{key:'listening',name:'听力',icon:'🎧',ic:'listen',color:'var(--blue)',goal:'7.0+',desc:'王陆语料库 · 剑雅真题'},{key:'reading',name:'阅读',icon:'📖',ic:'read',color:'var(--green)',goal:'7.0+',desc:'538同替 · 真经总纲'},{key:'writing',name:'写作',icon:'✍',ic:'write',color:'var(--orange)',goal:'6.5+',desc:'Simon+杜仕明 · AI批改'},{key:'speaking',name:'口语',icon:'🗣',ic:'speak',color:'var(--pink)',goal:'6.5+',desc:'跟练薛麦 · Part 2串题'}];
+  let total={listening:0,reading:0,writing:0,speaking:0},done={listening:0,reading:0,writing:0,speaking:0};
+  for(let d=1;d<=TOTAL_DAYS;d++){getDayTasks(d).forEach((t,i)=>{if(total[t.section]!==undefined){total[t.section]++;if(isTaskDone(d,i))done[t.section]++}})}
+  let html='';skills.forEach(s=>{const pct=total[s.key]?Math.round(done[s.key]/total[s.key]*100):0;html+=`<div class="skill-card-large"><div class="skill-top"><div class="skill-name"><div class="skill-icon ${s.ic}">${s.icon}</div>${s.name}</div><div style="font-size:12px;color:var(--text-light)">${done[s.key]}/${total[s.key]}</div></div><div class="skill-progress-bar"><div class="skill-progress-fill" style="width:${pct}%;background:${s.color}"></div></div><div class="skill-progress-text"><span>目标 ${s.goal}</span><span>${s.desc}</span></div></div>`});c.innerHTML=html;
+}
+function renderHistory(){
+  const c=document.getElementById('historyList');if(!c)return;
+  let history={};try{history=JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}')}catch(e){}
+  const dates=Object.keys(history).sort().reverse();
+  if(!dates.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-light);font-size:13px">暂无记录，开始打卡后自动归档</div>';return}
+  let html='',lastMonth='';dates.forEach(date=>{const h=history[date];const d=new Date(date+'T00:00:00');const month=`${d.getMonth()+1}月`;if(month!==lastMonth){html+=`<div class="history-date-group"><div class="history-date-label">${month}</div>`;lastMonth=month}const wd=['日','一','二','三','四','五','六'];html+=`<div class="history-card" onclick="goToDay(${h.day})"><div class="hc-header"><span class="hc-day">Day ${h.day} · ${d.getMonth()+1}/${d.getDate()} 周${wd[d.getDay()]}</span><span class="hc-pct">${h.pct}%</span></div><div class="hc-tasks">完成 ${h.done}/${h.total} 项任务</div></div>`});html+='</div>';c.innerHTML=html;
+}
+function updateSyncIndicator(){updateSyncStatus(state.supabaseUrl?'synced':'offline',state.supabaseUrl?'已连接':'未配置')}
+
+// ========== Speaking Data ==========
+const part1Topics=[
+  {name:'Work or Studies',cn:'工作或学习',q:['What work do you do? / What subjects are you studying?','Why did you choose that job/subject?','Do you like your job/subject?','What technology do you use at work/study?'],a:'这是必考题，一定要准备充分。回答要具体，不要只说"I like it"，要说为什么喜欢、具体做什么。',tip:'准备2-3个具体例子'},
+  {name:'Home & Accommodation',cn:'家与住宿',q:['What kind of accommodation do you live in?','Who do you live with?','What\'s your favorite room?','Do you plan to live there for a long time?'],a:'描述居住环境，注意用词准确（apartment/flat/house/dormitory），可以谈一谈最喜欢房间的原因。',tip:'准备居住环境的形容词'},
+  {name:'Hometown',cn:'家乡',q:['Where is your hometown?','Is it a big city or a small place?','What do you like about your hometown?','Has it changed much?'],a:'描述家乡时用具体细节，比如美食、景点、人文特点，避免泛泛而谈。',tip:'准备家乡2-3个特色'},
+  {name:'Teachers',cn:'老师',q:['Do you have a favorite teacher?','In what way has your favourite teacher helped you?','Are you still in touch with your primary school teachers?','Do you want to be a teacher in the future?'],a:'准备一个具体老师的故事，包括他/她如何影响你，给具体例子。',tip:'准备一个感人的师生故事'},
+  {name:'Social Media',cn:'社交媒体',q:['When did you start using social media?','Do you think you spend too much time on social media?','What do people often do on social media?','Have you ever posted anything on social media?'],a:'客观评价社交媒体的利弊，可以提到微信/微博/小红书等具体平台。',tip:'准备一个社交媒体使用习惯的例子'},
+  {name:'Tidiness',cn:'整洁',q:['Do you like to keep things tidy?','How do you keep your work or study space tidy?','Did you use to keep your room tidy as a child?','Do you think it is necessary to be tidy?'],a:'可以说自己是否爱整洁，如何整理，整洁的好处。',tip:'准备整理书桌/房间的具体做法'},
+  {name:'Websites',cn:'网站',q:['What kinds of websites do you often visit?','What is your favourite website?','Do you prefer getting information from websites or books?','Would you like to have your own website?'],a:'提到常用网站，说明为什么喜欢，以及网站给你的帮助。',tip:'准备1-2个具体网站及其功能'},
+  {name:'Watch',cn:'手表',q:['Do you wear a watch?','Have you ever got a watch as a gift?','Why do some people wear expensive watches?','Do you think it is important to wear a watch?'],a:'可以从实用角度和时尚角度谈手表，也可以谈手机取代手表的趋势。',tip:'准备手表的功能和意义'},
+  {name:'Shopping',cn:'购物',q:['Do you like shopping?','How often do you go shopping?','Do you prefer online shopping or in-store shopping?','Have you ever returned anything you bought online?'],a:'对比线上和线下购物体验，提到淘宝/京东等平台，可以讲一次购物经历。',tip:'准备一次有趣的购物经历'},
+  {name:'Mirrors',cn:'镜子',q:['Do you like looking at yourself in the mirror?','Have you ever bought mirrors?','Do you usually take a mirror with you?','Would you use mirrors to decorate your room?'],a:'可以谈镜子的实用性和装饰性，以及出门带小镜子的习惯。',tip:'准备镜子在生活中的作用'},
+  {name:'Music',cn:'音乐',q:['Do you prefer sad or happy music?','Have you taken any music classes?','Do you listen to music while doing other things?','Does happy music make you feel more excited?'],a:'说出你喜欢的音乐类型和原因，可以提一个具体的歌手或歌曲。',tip:'准备一个具体的音乐偏好例子'},
+  {name:'Films/Cinemas',cn:'电影',q:['What films do you like?','How often do you watch films?','Do you prefer to watch films at home or in the cinema?','Do you often go to the cinema with your friends?'],a:'说出喜欢的电影类型（喜剧/科幻/纪录片），比较在家和影院观影的体验。',tip:'准备一部喜欢的电影及原因'},
+  {name:'Art',cn:'艺术',q:['Do you like art?','Do you like visiting art galleries?','Do you want to be an artist?','Do you like modern art or traditional art?'],a:'谈对艺术的看法，可以提到中国传统艺术或现代艺术，是否喜欢参观美术馆。',tip:'准备一个艺术作品或展览的体验'},
+  {name:'Singing',cn:'唱歌',q:['Do you like singing? Why?','Have you ever learnt how to sing?','Who do you want to sing for?','Do you think singing can bring happiness to people?'],a:'谈唱歌的感受，可以提到KTV、唱歌类APP、是否学过唱歌。',tip:'准备唱歌带来的快乐体验'},
+  {name:'Sports Programs',cn:'体育节目',q:['Do you like watching sports programs on TV?','Do you like to watch live sports games?','Who do you like to watch sports games with?','Have you ever watched a sports game in a stadium?'],a:'谈对体育节目的喜好，是否去过现场观赛，和朋友一起看的体验。',tip:'准备一次观赛经历'},
+  {name:'Science',cn:'科学',q:['Do you like science?','When did you start to learn about science?','Which science subject is interesting to you?','Do you like watching science TV programs?'],a:'谈对科学的兴趣，学校里的科学课体验，喜欢物理/化学/生物哪个领域。',tip:'准备一个科学实验或发现的故事'},
+  {name:'Headphones',cn:'耳机',q:['Do you use headphones?','What type of headphones do you use?','When would you use headphones?','In what conditions would you not use headphones?'],a:'谈耳机的使用场景（通勤/学习/运动），喜欢什么类型的耳机。',tip:'准备耳机使用习惯的具体场景'},
+  {name:'Jokes & Comedies',cn:'笑话与喜剧',q:['Are you good at telling jokes?','Do your friends like to tell jokes?','Do you like to watch comedies?','Have you ever watched a live comedy show?'],a:'谈幽默感，是否喜欢看喜剧节目，可以提到中国的喜剧演员或节目。',tip:'准备一个让你开心的喜剧片段'},
+  {name:'Clothing',cn:'服装',q:['What kind of clothes do you like to wear?','Do you prefer comfortable clothes or smart clothes?','Do you spend a lot of time choosing clothes?','What color clothes do you like?'],a:'谈穿衣风格，日常穿搭偏好，是否注重搭配。',tip:'准备日常穿搭的描述'},
+  {name:'History',cn:'历史',q:['Do you like history?','Have you ever been to historical museums?','Did you like history when you were young?','When was the last time you read about history?'],a:'谈对历史的兴趣，去过的历史博物馆，喜欢的历史时期或人物。',tip:'准备一个历史故事或人物'},
+  {name:'Outer Space and Stars',cn:'外太空与星星',q:['Have you ever learnt about outer space and stars?','Do you like science fiction movies?','Do you want to know more about outer space?','Do you want to go into outer space in the future?'],a:'谈对太空的兴趣，看过的科幻电影，是否想了解更多天文知识。',tip:'准备一个科幻电影或天文知识'},
+  {name:'Morning Routines',cn:'早晨日常',q:['Do you like to get up early in the morning?','What is your morning routine?','Is breakfast important?','What do you do right after getting up?'],a:'描述早晨的日常流程，起床时间、早餐习惯、早上的活动。',tip:'准备详细的早晨时间线'},
+  {name:'Evening Time',cn:'傍晚时光',q:['Do you like the morning or evening?','What do you usually do in the evening?','What did you do in the evening when you were little?','Are there any differences between what you do in the evening now and what you did in the past?'],a:'描述晚上的活动和习惯，对比现在和过去的差异。',tip:'准备晚上的具体活动描述'},
+  {name:'Old Buildings',cn:'老建筑',q:['Have you ever seen old buildings in the city?','Do you think we should preserve old buildings?','Do you prefer living in an old building or a modern house?','Are there any old buildings you want to see?'],a:'谈对老建筑的看法，保护的必要性，新旧建筑对比。',tip:'准备一个老建筑参观经历'},
+  {name:'Dreams and Ambition',cn:'梦想与志向',q:['What was your childhood dream?','Are you the kind of person who sticks to dreams?','What is your dream job?','Do you think you are an ambitious person?'],a:'谈童年梦想、现在的志向、是否坚持梦想，要有真情实感。',tip:'准备一个关于梦想的真实故事'},
+  {name:'Public Gardens and Parks',cn:'公园',q:['Did you like going to parks as a child?','Do you still like going to parks now?','Would you like to see more parks in your city?','What do you like to do when visiting a park?'],a:'谈公园的体验，童年和现在的对比，城市需要更多公园吗。',tip:'准备一个公园游玩经历'},
+  {name:'Cars',cn:'汽车',q:['Did you enjoy traveling by car when you were a kid?','What types of cars do you like?','Do you prefer to be a driver or a passenger?','Do you think car colours are important?'],a:'谈对汽车的看法，喜欢开车还是坐车，对汽车颜色和类型的偏好。',tip:'准备一次难忘的乘车经历'}
+];
+
+const part2Topics=[
+  {name:'Describe a time when you got up early',cn:'早起经历',prompt:'You should say: When it was, Why you got up early, What you did, And explain how you felt about getting up early.',tip:'串题思路：早起经历可以串联"组织快乐活动""特别外出日""改变计划"等话题。准备一个具体的早起故事。',keywords:'woke up at dawn, felt refreshed, made the most of'},
+  {name:'Describe a friend from your childhood',cn:'发小',prompt:'You should say: Who he/she is, Where and how you met, What you often did together, And explain what made you like him/her.',tip:'串题思路：发小可以串联"帮助解决问题的人""擅长学语言的人""团队合作经历"。描述具体一起做的事。',keywords:'grew up together, shared secrets, trustworthy'},
+  {name:'Describe an important decision you made',cn:'重要决定',prompt:'You should say: What the decision was, How you made your decision, What the results were, And explain why it was important.',tip:'串题思路：重要决定可以串联"长久目标""改变计划""改变重要想法"。讲一个有转折点的故事。',keywords:'weighed pros and cons, life-changing, never regretted'},
+  {name:'Describe a person who is good at learning languages',cn:'擅长学语言的人',prompt:'You should say: Who this person is, How you know this person, What languages they speak, And explain why you think they are good at it.',tip:'串题思路：可以串联"激励你的人""成功克服困难的人"。描述他们的学习方法和成果。',keywords:'picks up languages quickly, dedicated learner, fluent in'},
+  {name:'Describe a time you helped someone',cn:'帮助别人的经历',prompt:'You should say: Who you helped, How you helped them, What the result was, And explain how you felt about it.',tip:'串题思路：帮助别人可以串联"团队合作""组织快乐活动""解决问题"。讲一个有成就感的帮助故事。',keywords:'lent a hand, made a difference, rewarding experience'},
+  {name:'Describe a place you would like to visit',cn:'想去的地方',prompt:'You should say: Where it is, What you know about it, What you would like to do there, And explain why you want to visit.',tip:'串题思路：可以串联"推荐旅行地""特别外出日""花费甚少的外出"。准备一个有特色的目的地。',keywords:'bucket list destination, breathtaking scenery, immerse myself in'},
+  {name:'Describe a special day out that cost little money',cn:'花费甚少的外出日',prompt:'You should say: When and where you went, Who you went with, What you did, And explain why it was special.',tip:'串题思路：串联"早起经历""快乐活动""推荐旅行地"。强调快乐不一定要花钱。',keywords:'on a shoestring budget, simple pleasures, unforgettable'},
+  {name:'Describe a long-term goal you would like to achieve',cn:'长久目标',prompt:'You should say: What the goal is, How long you have had this goal, What you are doing to achieve it, And explain why it is important to you.',tip:'串题思路：可以串联"重要决定""改变的想法""成功克服困难的人"。目标要具体可行。',keywords:'set my sights on, step by step, keeps me motivated'},
+  {name:'Describe a time you organized a happy event',cn:'组织快乐活动',prompt:'You should say: What the event was, When and where it was, Who was there, And explain why it was successful.',tip:'串题思路：串联"团队合作""早起经历""特别外出日"。讲一个你主导的活动。',keywords:'took the initiative, went smoothly, everyone had a blast'},
+  {name:'Describe a time you were stuck in traffic',cn:'堵车经历',prompt:'You should say: When and where it happened, Why there was a traffic jam, What you did while waiting, And explain how you felt.',tip:'串题思路：可以串联"改变计划""遇到困难""耐心等待"等话题。描述堵车时的感受和应对。',keywords:'bumper to bumper, stuck for hours, frustrating'},
+  {name:'Describe a challenging tech problem you faced',cn:'遇到的科技问题',prompt:'You should say: What the problem was, When it happened, How you solved it, And explain how you felt about it.',tip:'串题思路：串联"帮助解决问题的人""团队合作""重要决定"。描述问题解决的过程。',keywords:'technical glitch, troubleshoot, figured it out'},
+  {name:'Describe a home you like to visit but not live in',cn:'喜欢拜访但不想住的家',prompt:'You should say: Whose home it is, Where it is, What it looks like, And explain why you like visiting but wouldn\'t want to live there.',tip:'串题思路：可以串联"老建筑""高建筑""无聊的地方"。对比喜欢和不想住的原因。',keywords:'charming but impractical, lovely to drop by, not my cup of tea'},
+  {name:'Describe an important river or lake in your country',cn:'重要河流/湖泊',prompt:'You should say: Where it is, What it looks like, Why it is important, And explain how you feel about it.',tip:'串题思路：可以串联"推荐旅行地""想去的地方""环境法律"。准备中国的一条著名河流。',keywords:'lifeline of the region, scenic beauty, cultural significance'},
+  {name:'Describe a story or book with animals',cn:'包含动物的故事',prompt:'You should say: What the story/book is, When you read/heard it, What animals are in it, And explain why you remember it.',tip:'串题思路：可以串联"发小（童年一起看的故事）""有趣视频（动物视频）""改变想法"。',keywords:'animal characters, moral lesson, stuck with me'},
+  {name:'Describe an advertisement with a famous person',cn:'名人出演的广告',prompt:'You should say: What product it was for, Who the famous person was, What happened in the ad, And explain why you remember it.',tip:'串题思路：可以串联"有趣视频""改变想法""社交媒体"等话题。',keywords:'celebrity endorsement, catchy slogan, went viral'},
+  {name:'Describe something you did to learn a language',cn:'学语言的经历',prompt:'You should say: What language you learned, What you did, How long it took, And explain how you felt about it.',tip:'串题思路：直接关联雅思备考！串联"长久目标""重要决定""成功克服困难"。',keywords:'immersed myself, language app, practice makes perfect'},
+  {name:'Describe a food for special occasions',cn:'特别场合的食物',prompt:'You should say: What the food is, When people eat it, How it is made, And explain why it is special.',tip:'串题思路：串联"快乐活动""特别外出日""收到特殊蛋糕"。准备中国传统节日食物。',keywords:'traditional delicacy, festive atmosphere, brings people together'},
+  {name:'Describe a live sports event you watched',cn:'现场体育赛事',prompt:'You should say: What event it was, When and where you watched it, Who you watched it with, And explain why you liked it.',tip:'串题思路：串联"快乐活动""组织活动""团队合作"。准备一个激动人心的比赛。',keywords:'electric atmosphere, on the edge of my seat, cheering crowd'},
+  {name:'Describe a time you changed an important opinion',cn:'改变重要想法',prompt:'You should say: What the opinion was, Why you changed it, What happened after, And explain how you felt.',tip:'串题思路：串联"重要决定""改变计划""成功克服困难的人"。讲一个思想转变的故事。',keywords:'had a change of heart, eye-opening experience, shifted my perspective'},
+  {name:'Describe a time you worked in a group',cn:'团队合作',prompt:'You should say: What the task was, Who you worked with, What your role was, And explain how the experience was.',tip:'串题思路：串联"帮助解决问题""组织快乐活动""重要决定"。强调团队合作的价值。',keywords:'team effort, divided tasks, synergy'},
+  {name:'Describe a plan you had to change recently',cn:'改变计划',prompt:'You should say: What the original plan was, Why you had to change it, What you did instead, And explain how you felt.',tip:'串题思路：串联"重要决定""改变想法""堵车经历"。讲计划的调整和适应。',keywords:'threw a spanner in the works, adapted quickly, blessing in disguise'},
+  {name:'Describe a person with a successful business',cn:'成功商业人士',prompt:'You should say: Who this person is, What business they have, How you know about them, And explain why you think they are successful.',tip:'串题思路：串联"激励你的人""成功克服困难的人""擅长学语言的人"。',keywords:'self-made entrepreneur, turned vision into reality, inspiring'},
+  {name:'Describe a person who met difficulties but succeeded',cn:'克服困难成功的人',prompt:'You should say: Who this person is, What difficulties they faced, How they overcame them, And explain how you feel about them.',tip:'串题思路：串联"激励你的人""重要决定""长久目标"。准备一个励志故事。',keywords:'against all odds, perseverance paid off, role model'},
+  {name:'Describe a person who loves growing plants',cn:'喜欢种植物的人',prompt:'You should say: Who this person is, What plants they grow, How often they take care of them, And explain why they love it.',tip:'串题思路：串联"喜欢拜访但不想住的家（有花园）""公园""环境法律"。',keywords:'green thumb, therapeutic hobby, nurturing'},
+  {name:'Describe an interesting video you watched',cn:'有趣视频',prompt:'You should say: What the video was about, When and where you watched it, Who you watched it with, And explain why it was interesting.',tip:'串题思路：串联"社交媒体""广告""改变想法"。准备一个B站/YouTube上的视频。',keywords:'captivating content, binge-watched, thought-provoking'},
+  {name:'Describe a tall building you like or dislike',cn:'喜欢/不喜欢的高建筑',prompt:'You should say: Where it is, What it looks like, What it is used for, And explain why you like or dislike it.',tip:'串题思路：串联"老建筑""想去的地方""无聊的地方"。对比不同建筑风格。',keywords:'skyscraper, architectural marvel, dominates the skyline'},
+  {name:'Describe a special cake you received',cn:'收到特殊蛋糕',prompt:'You should say: When you received it, Who gave it to you, What it looked and tasted like, And explain why it was special.',tip:'串题思路：串联"快乐活动""组织活动""特别场合的食物"。讲一个有情感的故事。',keywords:'homemade with love, melted in my mouth, thoughtful gesture'},
+  {name:'Describe a boring place you have been to',cn:'去过的无聊地方',prompt:'You should say: Where it was, When you went there, What you did there, And explain why you found it boring.',tip:'串题思路：串联"喜欢拜访但不想住的家""改变计划""特别外出日（对比）"。',keywords:'nothing to write home about, dull atmosphere, couldn\'t wait to leave'},
+  {name:'Describe a place you travelled to and recommend',cn:'推荐旅行过的地方',prompt:'You should say: Where it is, When you went there, What you did there, And explain why you would recommend it.',tip:'串题思路：串联"想去的地方""重要河流湖泊""特别外出日"。',keywords:'hidden gem, exceeded expectations, must-visit'},
+  {name:'Describe a place to visit in free time',cn:'有空时想去的地方',prompt:'You should say: Where it is, What you can do there, How often you go, And explain why you like spending free time there.',tip:'串题思路：串联"公园""推荐旅行地""想去的地方"。准备一个常去的休闲场所。',keywords:'my go-to spot, unwind and recharge, peaceful ambiance'},
+  {name:'Describe an environmental law you would introduce',cn:'想颁布的环保法律',prompt:'You should say: What the law would be, Why it is needed, How it would be enforced, And explain what effect it would have.',tip:'串题思路：串联"长久目标""重要决定""改变想法"。准备一条切实可行的环保建议。',keywords:'tackle pollution, stricter regulations, sustainable future'},
+  {name:'Describe a person in the medical field',cn:'想从事医疗行业的人',prompt:'You should say: Who this person is, How you know them, Why they want to work in medicine, And explain your opinion about their choice.',tip:'串题思路：串联"激励你的人""成功克服困难的人""长久目标"。',keywords:'calling to heal, compassionate, dedicated to helping'},
+  {name:'Describe a message you sent with no reply',cn:'没收到回复的消息',prompt:'You should say: Who you sent it to, What the message was about, When it happened, And explain how you felt.',tip:'串题思路：串联"社交媒体""改变想法""改变计划"。讲一个等待回复的心情。',keywords:'left on read, anxious wait, miscommunication'}
+];
+
+function renderSpeakingTopics(){renderP1Topics();renderP2Topics()}
+function renderP1Topics(filter=''){
+  const c=document.getElementById('p1Topics');if(!c)return;
+  const f=filter.toLowerCase();const filtered=part1Topics.filter(t=>!f||t.name.toLowerCase().includes(f)||t.cn.includes(f));
+  let html='';filtered.forEach((t,i)=>{html+=`<div class="topic-card" id="p1card${i}" onclick="toggleTC('p1card${i}')"><div class="topic-header"><span class="topic-title">${t.name} <span style="font-size:11px;color:var(--text-light)">${t.cn}</span></span><span class="topic-count">${t.q.length}题</span></div><div class="topic-expand">`;t.q.forEach(q=>html+=`<div class="qa"><div class="q">❓ ${q}</div></div>`);html+=`<div class="qa"><div class="a">💬 ${t.a}</div></div>`;if(t.tip)html+=`<div class="tip">💡 ${t.tip}</div>`;html+=`</div></div>`});if(!filtered.length)html='<div style="text-align:center;padding:40px;color:var(--text-light)">没有匹配的话题</div>';c.innerHTML=html;
+}
+function renderP2Topics(filter=''){
+  const c=document.getElementById('p2Topics');if(!c)return;
+  const f=filter.toLowerCase();const filtered=part2Topics.filter(t=>!f||t.name.toLowerCase().includes(f)||t.cn.includes(f)||t.keywords.includes(f));
+  let html='';filtered.forEach((t,i)=>{html+=`<div class="topic-card" id="p2card${i}" onclick="toggleTC('p2card${i}')"><div class="topic-header"><span class="topic-title">${t.name} <span style="font-size:11px;color:var(--text-light)">${t.cn}</span></span><span class="topic-count">Part 2</span></div><div class="topic-expand"><div class="qa"><div class="q">📋 ${t.prompt}</div></div><div class="qa"><div class="a">🔗 ${t.tip}</div></div><div class="tip">🔑 关键词：${t.keywords}</div></div></div>`});if(!filtered.length)html='<div style="text-align:center;padding:40px;color:var(--text-light)">没有匹配的话题卡</div>';c.innerHTML=html;
+}
+function toggleTC(id){const el=document.getElementById(id);if(el)el.classList.toggle('expanded')}
+function filterTopics(type){if(type==='p1')renderP1Topics(document.getElementById('p1Search').value);else renderP2Topics(document.getElementById('p2Search').value)}
+
+// ========== Online/Offline ==========
+function updateOnlineStatus(){
+  const badge=document.getElementById('offlineBadge');
+  if(!navigator.onLine){badge.classList.add('show')}else{badge.classList.remove('show');syncToCloud()}
+}
+
+// ========== PWA ==========
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+
+// ========== Events ==========
+document.getElementById('examDateInput').addEventListener('change',function(e){state.examDate=e.target.value;const start=new Date(state.examDate+'T00:00:00');start.setDate(start.getDate()-60);state.startDate=start.toISOString().split('T')[0];saveState();render()});
+document.getElementById('importFile').addEventListener('change',importData);
+window.addEventListener('online',updateOnlineStatus);window.addEventListener('offline',updateOnlineStatus);
+
+// ========== Init ==========
+loadState();updateOnlineStatus();render();renderSpeakingTopics();
+</script>
+</body>
+</html>
