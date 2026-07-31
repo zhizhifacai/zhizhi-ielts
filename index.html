@@ -406,10 +406,13 @@ let state = {startDate:'2026-08-01',examDate:null,currentDay:1,progress:{},theme
 
 function loadState(){
   const saved = localStorage.getItem(STORAGE_KEY);
-  if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}}
+  if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}
+    // 清除旧的开始日期缓存
+    localStorage.removeItem('zhizhi_ielts_v4');
+  }
   if(!state.progress) state.progress = {};
   if(!state.currentDay) state.currentDay = 1;
-  if(!state.startDate) state.startDate = '2026-08-01';
+  state.startDate = '2026-08-01'; // 强制设为8月1日
   state.theme = localStorage.getItem(THEME_KEY) || 'light';
   applyTheme(state.theme);
   state.supabaseUrl = localStorage.getItem(SUPABASE_URL_KEY) || '';
