@@ -476,6 +476,14 @@ function generateDayTasks(day){
   const isWangLuRound1 = day <= 30;
   const isWangLuRound2 = day > 30 && day <= 55;
 
+  // Day 1 只做词汇，其他从 Day 2 开始
+  if(day === 1){
+    tasks.push({section:'vocab',sectionName:'词汇',text:'背诵雅思核心词汇 100个（新学+复习）',meta:'睡前快速过一遍',duration:'40min',tool:'单词APP'});
+    tasks.push({section:'vocab',sectionName:'词汇',text:'做题过程中遇到的生词积累背诵',meta:'整理听力/阅读/写作中遇到的生词、同替词到生词本',duration:'60min',tool:'生词本'});
+    tasks.push({section:'vocab',sectionName:'词汇',text:'熟悉雅思核心词汇表，制定背诵计划',meta:'摸清自己的词汇量水平，分阶段规划',duration:'30min',tool:'单词APP'});
+    return tasks;
+  }
+
   tasks.push({section:'vocab',sectionName:'词汇',text:'背诵雅思核心词汇 100个（新学+复习）',meta:'睡前快速过一遍',duration:'40min',tool:'单词APP'});
   tasks.push({section:'vocab',sectionName:'词汇',text:'做题过程中遇到的生词积累背诵',meta:'整理听力/阅读/写作中遇到的生词、同替词到生词本',duration:'60min',tool:'生词本'});
 
@@ -499,7 +507,7 @@ function generateDayTasks(day){
     tasks.push({section:'reading',sectionName:'阅读',text:'阅读错题四步复盘',meta:'①错误原因 ②错误段落 ③正确段落 ④同替对应',duration:'40min',tool:'错题本'});
   }
 
-  // Writing — skip first 15 days
+  // Writing — skip first 15 days (Day 2-15 无写作)
   if(day > 15){
     const wc = day % 4;
     if(wc === 1) tasks.push({section:'writing',sectionName:'写作',text:phase===1?`学习Simon/杜仕明 ${['是否同意类','利弊分析类','双边讨论类','报告类'][Math.floor((day-1)/4)%4]} 大作文框架`:'大作文限时训练（40分钟）+ 多次元雅思AI批改',meta:phase===1?'整理结构模板与常用句型':'写完后对照AI反馈修改',duration:phase===1?'50min':'60min',tool:phase===1?'Simon+杜仕明':'多次元雅思AI'});
