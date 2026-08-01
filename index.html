@@ -402,7 +402,7 @@ const focusHints = {
 };
 
 // ========== State ==========
-let state = {startDate:'2026-08-01',examDate:null,currentDay:1,progress:{},theme:'light',supabaseUrl:'',supabaseKey:''};
+let state = {startDate:'2026-08-02',examDate:null,currentDay:1,progress:{},theme:'light',supabaseUrl:'',supabaseKey:''};
 
 function loadState(){
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -412,7 +412,7 @@ function loadState(){
   }
   if(!state.progress) state.progress = {};
   if(!state.currentDay) state.currentDay = 1;
-  state.startDate = '2026-08-01'; // 强制设为8月1日
+  state.startDate = '2026-08-02'; // 强制设为8月2日
   state.theme = localStorage.getItem(THEME_KEY) || 'light';
   applyTheme(state.theme);
   state.supabaseUrl = localStorage.getItem(SUPABASE_URL_KEY) || '';
