@@ -402,10 +402,11 @@ const focusHints = {
 };
 
 // ========== State ==========
-let state = {startDate:'2026-08-02',examDate:null,currentDay:1,progress:{},theme:'light',supabaseUrl:'',supabaseKey:''};
+let state = {startDate:'2026-08-03',examDate:null,currentDay:1,progress:{},theme:'light',supabaseUrl:'',supabaseKey:''};
 
 function loadState(){
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem('zhizhi_ielts_v4');
   const saved = localStorage.getItem(STORAGE_KEY);
   if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}
     // 清除旧的开始日期缓存
