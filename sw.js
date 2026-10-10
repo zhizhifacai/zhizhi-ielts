@@ -1,15 +1,21 @@
-const CACHE_NAME = 'zhizhi-ielts-v5';
+const CACHE_NAME = 'zhizhi-ielts-v6';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './data/data-stories.js',
+  './data/data-p1.js',
+  './data/data-p2.js'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => {
+      // 数据文件可能较大，逐个添加，单个失败不影响整体
+      return Promise.all(ASSETS.map(a => cache.add(a).catch(() => null)));
+    })
   );
   self.skipWaiting();
 });
