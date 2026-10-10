@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zhizhi-ielts-v12';
+const CACHE_NAME = 'zhizhi-ielts-v13';
 const ASSETS = [
   './',
   './index.html',

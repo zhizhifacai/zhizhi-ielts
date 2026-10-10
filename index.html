@@ -377,21 +377,20 @@ body{
     </div>
     <div class="page" id="page-speaking1">
       <div class="page-title">口语 Part 1 话题库</div>
-      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">TALKAA 2026年9-12月 · 4册真题解析 · 46个话题 · 含答题思路(中英)/关键词汇</p>
+      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">2026年9-12月 · 大陆考区题库 · 33个话题 / 207道题 · 每题可直接背诵的中英答案</p>
       <div class="book-tabs" id="p1BookTabs">
         <button class="book-tab active" data-b="all" onclick="setP1Book('all')">全部</button>
         <button class="book-tab" data-b="02" onclick="setP1Book('02')">当季新题</button>
         <button class="book-tab" data-b="04" onclick="setP1Book('04')">保留题</button>
-        <button class="book-tab" data-b="06" onclick="setP1Book('06')">海外新题</button>
-        <button class="book-tab" data-b="08" onclick="setP1Book('08')">万年老题</button>
+        <button class="book-tab" data-b="08" onclick="setP1Book('08')">必考题</button>
       </div>
       <input class="topic-search" id="p1Search" placeholder="搜索 Part 1 话题..." oninput="filterTopics('p1')">
       <div id="p1Topics"></div>
     </div>
     <div class="page" id="page-speaking2">
       <div class="page-title">口语 Part 2 · 串题宝典</div>
-      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">TALKAA 2026年9-12月 · 4册真题解析 · 71道题 · 8大核心素材全覆盖</p>
-      <div class="ready-banner">💡 <strong>什么叫串题？</strong>先备好 8 个"有血有肉"的故事，考试时看题目选素材、换切入点即可。8 个素材可覆盖全部 71 道题，记忆量减少约 90%。</div>
+      <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">2026年9-12月 · 大陆考区题库 · 56道题 · 8大核心素材全覆盖 · 含完整范文与Part3答案</p>
+      <div class="ready-banner">💡 <strong>什么叫串题？</strong>先备好 8 个"有血有肉"的故事，考试时看题目选素材、换切入点即可。8 个素材可覆盖全部 56 道大陆题，记忆量大幅减少。</div>
       <div class="section-title"><h2>八大核心素材</h2></div>
       <div id="p2Stories"></div>
       <div class="section-title"><h2>题目 → 素材 对应表</h2></div>
@@ -399,7 +398,6 @@ body{
         <button class="book-tab active" data-b="all" onclick="setP2Book('all')">全部</button>
         <button class="book-tab" data-b="02" onclick="setP2Book('02')">当季新题</button>
         <button class="book-tab" data-b="04" onclick="setP2Book('04')">保留题</button>
-        <button class="book-tab" data-b="06" onclick="setP2Book('06')">海外新题</button>
       </div>
       <input class="topic-search" id="p2Search" placeholder="搜索题目（如：城市 / 帮助 / 礼物）..." oninput="filterTopics('p2')">
       <div id="p2Topics"></div>
@@ -904,9 +902,9 @@ function renderP2Topics(filter=''){
   if(!total) html='<div style="text-align:center;padding:40px;color:var(--text-light)">没有匹配的题目</div>';
   c.innerHTML=html;
 }
-// 题目全局序号（1..71），与素材map的 n 对应
-const _bookOrder=['02','04','06'];
-const _bookBase={'02':0,'04':26,'06':61};
+// 题目全局序号（1..56，仅大陆题库），与素材map的 n 对应
+const _bookOrder=['02','04'];
+const _bookBase={'02':0,'04':26};
 function globalIndexOf(book, r){
   const arr=part2Books.find(b=>b.book===book); if(!arr) return 0;
   const i=arr.cards.indexOf(r);
