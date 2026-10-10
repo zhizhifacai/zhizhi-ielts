@@ -755,30 +755,33 @@ function updateSyncIndicator(){updateSyncStatus(state.supabaseUrl?'synced':'offl
 // 数据由 data/data-p1.js / data/data-p2.js / data/data-stories.js 提供（挂 window），异步加载
 let part1Books = [], part2Books = [], p2Stories8 = [], p2Extra8 = [], p2Samples = {}, p1Answers = {}, p3Answers = {};
 let speakingDataReady = false, allTitles = {};
+function collectSpeakingData(){
+  part1Books = window.part1Books || [];
+  part2Books = window.part2Books || [];
+  p2Stories8 = window.p2Stories8 || [];
+  p2Extra8   = window.p2Extra8 || [];
+  p2Samples  = window.p2Samples || {};
+  p1Answers  = buildP1AnswerIndex(window.p1Answers || []);
+  p3Answers  = buildP3AnswerIndex(window.p3Answers || []);
+  buildAllTitles();
+}
 function loadSpeakingData(){
   if(speakingDataReady) return;
-  const files = ['data/data-stories.js','data/data-p1ans.js','data/data-p3ans.js','data/data-p1.js','data/data-p2.js','data/data-samples.js'];
+  const files = ['data/data-p1.js','data/data-p2.js','data/data-samples.js','data/data-stories.js','data/data-p1ans.js','data/data-p3ans.js'];
   let done = 0;
-  const finish = ()=>{
+  // 每加载完一个文件就尝试刷新一次，数据到齐即渲染，不等待全部完成
+  const step = ()=>{
     done++;
-    if(done===files.length){
-      part1Books = window.part1Books || [];
-      part2Books = window.part2Books || [];
-      p2Stories8 = window.p2Stories8 || [];
-      p2Extra8   = window.p2Extra8 || [];
-      p2Samples  = window.p2Samples || {};
-      p1Answers  = buildP1AnswerIndex(window.p1Answers || []);
-      p3Answers  = buildP3AnswerIndex(window.p3Answers || []);
-      speakingDataReady = true;
-      buildAllTitles();
-      renderSpeakingTopics();
-    }
+    collectSpeakingData();
+    const ok = part1Books.length && part2Books.length && Object.keys(p2Samples).length;
+    if(ok){ speakingDataReady = true; renderSpeakingTopics(); }
+    else if(done===files.length){ speakingDataReady = true; renderSpeakingTopics(); }
   };
   files.forEach(f=>{
     const s = document.createElement('script');
     s.src = f;
-    s.onload = finish;
-    s.onerror = finish;
+    s.onload = step;
+    s.onerror = step;
     document.head.appendChild(s);
   });
 }
