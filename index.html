@@ -233,6 +233,10 @@ body{
 .vocab-chip{font-size:11px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:2px 8px;border-radius:10px;line-height:1.5}
 .idiom-chip{font-size:11px;background:var(--primary-soft);color:var(--primary);padding:2px 8px;border-radius:10px;line-height:1.5}
 .p3-from{font-size:10.5px;color:var(--text-light);margin-top:2px;font-style:italic}
+.p2-sample{margin-top:10px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.p2-sample-head{font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px}
+.p2-sample-en{font-size:13px;line-height:1.85;color:var(--text);margin-bottom:10px}
+.p2-sample-cn{font-size:12.5px;line-height:1.85;color:var(--text-light);padding-top:10px;border-top:1px dashed var(--border)}
 
 /* Timeline */
 .timeline-item{display:flex;gap:12px;margin-bottom:16px}
@@ -745,11 +749,11 @@ function updateSyncIndicator(){updateSyncStatus(state.supabaseUrl?'synced':'offl
 // ========== Speaking Data ==========
 // ========== Speaking Data（4册真题解析 · 外部数据文件）==========
 // 数据由 data/data-p1.js / data/data-p2.js / data/data-stories.js 提供（挂 window），异步加载
-let part1Books = [], part2Books = [], p2Stories8 = [], p2Extra8 = [];
+let part1Books = [], part2Books = [], p2Stories8 = [], p2Extra8 = [], p2Samples = {};
 let speakingDataReady = false, allTitles = {};
 function loadSpeakingData(){
   if(speakingDataReady) return;
-  const files = ['data/data-stories.js','data/data-p1.js','data/data-p2.js'];
+  const files = ['data/data-stories.js','data/data-p1.js','data/data-p2.js','data/data-samples.js'];
   let done = 0;
   const finish = ()=>{
     done++;
@@ -758,6 +762,7 @@ function loadSpeakingData(){
       part2Books = window.part2Books || [];
       p2Stories8 = window.p2Stories8 || [];
       p2Extra8   = window.p2Extra8 || [];
+      p2Samples  = window.p2Samples || {};
       speakingDataReady = true;
       buildAllTitles();
       renderSpeakingTopics();
@@ -850,7 +855,15 @@ function renderP2Topics(filter=''){
       html+=`<div class="topic-card" id="${cid}" onclick="toggleTC('${cid}')">
         <div class="topic-header"><span class="topic-title">${link?'<span class="cat-badge">'+link.emoji+' 素材'+link.sid+'</span>':'<span class="cat-badge">'+(r.cat||'话题')+'</span>'}${esc(r.t.replace(/^Describe /,''))}</span><span class="topic-count">${r.p3.length}追问</span></div>
         <div class="topic-expand">`;
-      if(link) html+=`<div class="p3-block" style="border-left-color:var(--green)"><div class="p3-title">🎯 串题方案：用【素材${link.sid} · ${esc(link.title)}】</div><div class="p3-q" style="font-size:12px;color:var(--text);line-height:1.7">${esc(link.how)}</div></div>`;
+      const smp=p2Samples[gi];
+      if(link) html+=`<div class="p3-block" style="border-left-color:var(--green)"><div class="p3-title">🎯 怎么套：用【素材${link.sid} · ${esc(link.title)}】</div><div class="p3-q" style="font-size:12px;color:var(--text);line-height:1.7">${esc(smp?smp.one:link.how)}</div></div>`;
+      // 完整范文（直接背诵）
+      if(smp){
+        html+=`<div class="p2-sample"><div class="p2-sample-head">📝 完整范文（可直接背诵）</div>`;
+        html+=`<div class="p2-sample-en">${esc(smp.en)}</div>`;
+        html+=`<div class="p2-sample-cn">${esc(smp.cn)}</div>`;
+        html+=`</div>`;
+      }
       if(r.ov) html+=`<div class="p1-ov" style="margin-top:8px">💡 ${esc(r.ov)}</div>`;
       (r.gs||[]).forEach(g=>{
         html+=`<div class="p1-idea"><div class="p1-idea-t">▸ ${esc(g.t)}</div>`;

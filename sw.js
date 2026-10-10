@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zhizhi-ielts-v6';
+const CACHE_NAME = 'zhizhi-ielts-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,8 @@ const ASSETS = [
   './icons/icon-512.png',
   './data/data-stories.js',
   './data/data-p1.js',
-  './data/data-p2.js'
+  './data/data-p2.js',
+  './data/data-samples.js'
 ];
 
 self.addEventListener('install', event => {
