@@ -237,6 +237,10 @@ body{
 .p2-sample-head{font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px}
 .p2-sample-en{font-size:13px;line-height:1.85;color:var(--text);margin-bottom:10px}
 .p2-sample-cn{font-size:12.5px;line-height:1.85;color:var(--text-light);padding-top:10px;border-top:1px dashed var(--border)}
+.p1-ans{margin-top:8px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.p1-ans-head{font-size:11.5px;font-weight:700;color:var(--primary);margin-bottom:7px}
+.p1-ans-en{font-size:13px;line-height:1.85;color:var(--text)}
+.p1-ans-cn{font-size:12.5px;line-height:1.85;color:var(--text-light);padding-top:8px;margin-top:8px;border-top:1px dashed var(--border)}
 
 /* Timeline */
 .timeline-item{display:flex;gap:12px;margin-bottom:16px}
@@ -749,11 +753,11 @@ function updateSyncIndicator(){updateSyncStatus(state.supabaseUrl?'synced':'offl
 // ========== Speaking Data ==========
 // ========== Speaking Data（4册真题解析 · 外部数据文件）==========
 // 数据由 data/data-p1.js / data/data-p2.js / data/data-stories.js 提供（挂 window），异步加载
-let part1Books = [], part2Books = [], p2Stories8 = [], p2Extra8 = [], p2Samples = {};
+let part1Books = [], part2Books = [], p2Stories8 = [], p2Extra8 = [], p2Samples = {}, p1Answers = {}, p3Answers = {};
 let speakingDataReady = false, allTitles = {};
 function loadSpeakingData(){
   if(speakingDataReady) return;
-  const files = ['data/data-stories.js','data/data-p1.js','data/data-p2.js','data/data-samples.js'];
+  const files = ['data/data-stories.js','data/data-p1ans.js','data/data-p3ans.js','data/data-p1.js','data/data-p2.js','data/data-samples.js'];
   let done = 0;
   const finish = ()=>{
     done++;
@@ -763,6 +767,8 @@ function loadSpeakingData(){
       p2Stories8 = window.p2Stories8 || [];
       p2Extra8   = window.p2Extra8 || [];
       p2Samples  = window.p2Samples || {};
+      p1Answers  = buildP1AnswerIndex(window.p1Answers || []);
+      p3Answers  = buildP3AnswerIndex(window.p3Answers || []);
       speakingDataReady = true;
       buildAllTitles();
       renderSpeakingTopics();
@@ -785,6 +791,21 @@ function setP2Book(b){p2BookFilter=b;document.querySelectorAll('#p2BookTabs .boo
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 // ---- Part1 渲染 ----
+// 把 data-p1ans.js 的数组整理成 (book, topic_no, qi) -> {en,cn} 的索引
+function buildP1AnswerIndex(arr){
+  const m={};
+  (arr||[]).forEach(a=>{ m[a.b+'|'+a.t+'|'+a.i]={en:a.en,cn:a.cn}; });
+  return m;
+}
+function getP1Ans(book,tno,qi){ return p1Answers[book+'|'+tno+'|'+qi]; }
+// 把 data-p3ans.js 的数组整理成 (book, card_idx, p3_idx) -> {en,cn} 的索引
+function buildP3AnswerIndex(arr){
+  const m={};
+  (arr||[]).forEach(a=>{ m[a.b+'|'+a.c+'|'+a.i]={en:a.en,cn:a.cn}; });
+  return m;
+}
+function getP3Ans(book,cidx,pi){ return p3Answers[book+'|'+cidx+'|'+pi]; }
+
 function renderP1Topics(filter=''){
   const c=document.getElementById('p1Topics');if(!c)return;
   if(!part1Books.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-light)">题库加载中…</div>';return}
@@ -802,19 +823,13 @@ function renderP1Topics(filter=''){
         <div class="topic-header"><span class="topic-title"><span class="cat-badge">${bk.bookName}</span>${esc(t.en)} <span style="font-size:11px;color:var(--text-light)">${esc(t.cn)}</span></span><span class="topic-count">${t.qs.length}题</span></div>
         <div class="topic-expand">`;
       t.qs.forEach((q,qi)=>{
+        const a=getP1Ans(bk.book,t.no,qi);
         html+=`<div class="p1-q-block">
           <div class="p1-q">Q${qi+1}. ${esc(q.q)}</div>`;
-        if(q.ov) html+=`<div class="p1-ov">💡 ${esc(q.ov)}</div>`;
-        (q.gs||[]).forEach(g=>{
-          html+=`<div class="p1-idea"><div class="p1-idea-t">▸ ${esc(g.t)}</div>`;
-          (g.p||[]).forEach(pr=>{
-            html+=`<div class="p1-pair">${pr[0]?'<div class="p1-en">'+esc(pr[0])+'</div>':''}${pr[1]?'<div class="p1-cn">'+esc(pr[1])+'</div>':''}</div>`;
-          });
-          html+=`</div>`;
-        });
-        if((q.rel&&q.rel.length)||(q.idi&&q.idi.length)){
-          html+=`<div class="p1-vocab"><span class="p1-vocab-label">🔑 关键词</span>${(q.rel||[]).map(v=>'<span class="vocab-chip">'+esc(v)+'</span>').join('')}</div>`;
-          if(q.idi&&q.idi.length) html+=`<div class="p1-vocab"><span class="p1-vocab-label">✨ 习语</span>${q.idi.map(v=>'<span class="idiom-chip">'+esc(v)+'</span>').join('')}</div>`;
+        if(a){
+          html+=`<div class="p1-ans"><div class="p1-ans-head">📝 可背答案</div><div class="p1-ans-en">${esc(a.en)}</div><div class="p1-ans-cn">${esc(a.cn)}</div></div>`;
+        } else if(q.ov){
+          html+=`<div class="p1-ov">💡 ${esc(q.ov)}</div>`;
         }
         html+=`</div>`;
       });
@@ -864,34 +879,17 @@ function renderP2Topics(filter=''){
         html+=`<div class="p2-sample-cn">${esc(smp.cn)}</div>`;
         html+=`</div>`;
       }
-      if(r.ov) html+=`<div class="p1-ov" style="margin-top:8px">💡 ${esc(r.ov)}</div>`;
-      (r.gs||[]).forEach(g=>{
-        html+=`<div class="p1-idea"><div class="p1-idea-t">▸ ${esc(g.t)}</div>`;
-        (g.p||[]).forEach(pr=>{
-          html+=`<div class="p1-pair">${pr[0]?'<div class="p1-en">'+esc(pr[0])+'</div>':''}${pr[1]?'<div class="p1-cn">'+esc(pr[1])+'</div>':''}</div>`;
-        });
-        html+=`</div>`;
-      });
-      if((r.rel&&r.rel.length)||(r.idi&&r.idi.length)){
-        html+=`<div class="p1-vocab"><span class="p1-vocab-label">🔑 关键词</span>${(r.rel||[]).map(v=>'<span class="vocab-chip">'+esc(v)+'</span>').join('')}</div>`;
-        if(r.idi&&r.idi.length) html+=`<div class="p1-vocab"><span class="p1-vocab-label">✨ 习语</span>${r.idi.map(v=>'<span class="idiom-chip">'+esc(v)+'</span>').join('')}</div>`;
-      }
-      // Part3 追问
+      // Part3 追问（可背答案）
+      const cidx=bk.cards.indexOf(r);
       if(r.p3&&r.p3.length){
-        html+=`<div class="p3-block"><div class="p3-title">🗣️ Part 3 追问（${r.p3.length}问）</div>`;
+        html+=`<div class="p3-block"><div class="p3-title">🗣️ Part 3 追问 · 可背答案（${r.p3.length}问）</div>`;
         r.p3.forEach((p,pi)=>{
+          const pa=getP3Ans(bk.book,cidx,pi);
           html+=`<div class="p1-q-block"><div class="p1-q">Q${pi+1}. ${esc(p.q)}</div>`;
-          if(p.ov) html+=`<div class="p1-ov">💡 ${esc(p.ov)}</div>`;
-          (p.gs||[]).forEach(g=>{
-            html+=`<div class="p1-idea"><div class="p1-idea-t">▸ ${esc(g.t)}</div>`;
-            (g.p||[]).forEach(pr=>{
-              html+=`<div class="p1-pair">${pr[0]?'<div class="p1-en">'+esc(pr[0])+'</div>':''}${pr[1]?'<div class="p1-cn">'+esc(pr[1])+'</div>':''}</div>`;
-            });
-            html+=`</div>`;
-          });
-          if((p.rel&&p.rel.length)||(p.idi&&p.idi.length)){
-            html+=`<div class="p1-vocab"><span class="p1-vocab-label">🔑 关键词</span>${(p.rel||[]).map(v=>'<span class="vocab-chip">'+esc(v)+'</span>').join('')}</div>`;
-            if(p.idi&&p.idi.length) html+=`<div class="p1-vocab"><span class="p1-vocab-label">✨ 习语</span>${p.idi.map(v=>'<span class="idiom-chip">'+esc(v)+'</span>').join('')}</div>`;
+          if(pa){
+            html+=`<div class="p1-ans"><div class="p1-ans-en">${esc(pa.en)}</div><div class="p1-ans-cn">${esc(pa.cn)}</div></div>`;
+          } else if(p.ov){
+            html+=`<div class="p1-ov">💡 ${esc(p.ov)}</div>`;
           }
           html+=`</div>`;
         });

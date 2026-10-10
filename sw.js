@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zhizhi-ielts-v7';
+const CACHE_NAME = 'zhizhi-ielts-v9';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './data/data-stories.js',
+  './data/data-p1ans.js',
+  './data/data-p3ans.js',
   './data/data-p1.js',
   './data/data-p2.js',
   './data/data-samples.js'
